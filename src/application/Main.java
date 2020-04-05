@@ -11,6 +11,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 
 public class Main extends Application {
+	//como precico da referencia mainScene, temos que fazer esse atributo
+	private static Scene mainScene;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -20,13 +22,17 @@ public class Main extends Application {
 			scrollPane.setFitToHeight(true);
 			scrollPane.setFitToWidth(true);
 			
-			Scene mainScene = new Scene(scrollPane);
+			mainScene = new Scene(scrollPane);
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Sample JavaFX application");
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	//fazer um metodo para podemos pegar essa referencia
+	public static Scene getMainScene() {
+		return mainScene;
 	}
 
 	public static void main(String[] args) {
