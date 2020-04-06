@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -35,12 +36,15 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView2("/gui/DepartmentList.fxml");
+		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
+		       controller.setDepartmentService(new DepartmentService());
+		       controller.updateTableView();
+		});
 	}
 	
 	@FXML
 	public void onMenuItemAboutAction() {
-		loadView("/gui/About.fxml");
+		loadView("/gui/About.fxml", x -> {});
 	}
 	
 	
@@ -50,7 +54,7 @@ public class MainViewController implements Initializable {
 		
 	}
 	
-	private synchronized void loadView(String absoluteName) {
+	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 		try {
 			// esse metodo e para abrir a pagina load
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -64,34 +68,14 @@ public class MainViewController implements Initializable {
 			mainVbox.getChildren().add(mainMenu);
 			mainVbox.getChildren().addAll(newVbox.getChildren());
 			
+			T controller = loader.getController();
+			initializingAction.accept(controller);
 		}catch (IOException e) {
 			Alerts.showAlert("IoException", "Error loading view ", e.getMessage(), AlertType.ERROR);
 		
 				}
 		}
    
-	private synchronized void loadView2(String absoluteName) {
-		try {
-			// esse metodo e para abrir a pagina load
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-			VBox newVbox = loader.load();
-    // abrir um vbox dentra da pagina, clicando no meu item
-			Scene mainScene = Main.getMainScene();
-			VBox mainVbox = (VBox)((ScrollPane) mainScene.getRoot()).getContent();
-			
-			Node mainMenu = mainVbox.getChildren().get(0);
-			mainVbox.getChildren().clear();
-			mainVbox.getChildren().add(mainMenu);
-			mainVbox.getChildren().addAll(newVbox.getChildren());
-			
-			//fazendo  manual para mostrar os dados na tela, o department
-			DepartmentListController controller = loader.getController();
-			controller.setDepartmentService(new DepartmentService());
-			controller.updateTableView();
-			
-		}catch (IOException e) {
-			Alerts.showAlert("IoException", "Error loading view ", e.getMessage(), AlertType.ERROR);
+	
 		
-				}
-		}
 }
