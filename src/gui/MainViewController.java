@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
+import model.services.DepartmentService;
 
 public class MainViewController implements Initializable {
 
@@ -34,7 +35,7 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView("/gui/DepartmentList.fxml");
+		loadView2("/gui/DepartmentList.fxml");
 	}
 	
 	@FXML
@@ -68,5 +69,29 @@ public class MainViewController implements Initializable {
 		
 				}
 		}
-
+   
+	private synchronized void loadView2(String absoluteName) {
+		try {
+			// esse metodo e para abrir a pagina load
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			VBox newVbox = loader.load();
+    // abrir um vbox dentra da pagina, clicando no meu item
+			Scene mainScene = Main.getMainScene();
+			VBox mainVbox = (VBox)((ScrollPane) mainScene.getRoot()).getContent();
+			
+			Node mainMenu = mainVbox.getChildren().get(0);
+			mainVbox.getChildren().clear();
+			mainVbox.getChildren().add(mainMenu);
+			mainVbox.getChildren().addAll(newVbox.getChildren());
+			
+			//fazendo  manual para mostrar os dados na tela, o department
+			DepartmentListController controller = loader.getController();
+			controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
+			
+		}catch (IOException e) {
+			Alerts.showAlert("IoException", "Error loading view ", e.getMessage(), AlertType.ERROR);
+		
+				}
+		}
 }
