@@ -34,7 +34,7 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		System.out.println("MenuItemDepartmentAction");
+		loadView("/gui/DepartmentList.fxml");
 	}
 	
 	@FXML
@@ -49,12 +49,12 @@ public class MainViewController implements Initializable {
 		
 	}
 	
-	private void loadView(String absoluteName) {
+	private synchronized void loadView(String absoluteName) {
 		try {
 			// esse metodo e para abrir a pagina load
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			VBox newVbox = loader.load();
-    
+    // abrir um vbox dentra da pagina, clicando no meu item
 			Scene mainScene = Main.getMainScene();
 			VBox mainVbox = (VBox)((ScrollPane) mainScene.getRoot()).getContent();
 			
