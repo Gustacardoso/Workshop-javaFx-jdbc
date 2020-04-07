@@ -33,7 +33,7 @@ public class MainViewController implements Initializable {
 	public void onMenuItemSellerAction() {
 		System.out.println("MenuItemSellerAction");
 	}
-	
+	//tivemos que usar espressao lambda.
 	@FXML
 	public void onMenuItemDepartmentAction() {
 		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
