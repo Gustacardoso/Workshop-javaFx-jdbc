@@ -102,6 +102,7 @@ public class DepartmentListController implements Initializable{
 			DepartmetFormController controller = loader.getController();
 			//injetando
 			controller.setDepartament(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormData();
 			
 			//colocar uma tela na frente da outra

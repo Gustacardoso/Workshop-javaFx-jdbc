@@ -1,19 +1,29 @@
 package gui;
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import db.DbException;
+import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Department;
+import model.services.DepartmentService;
 
-public class DepartmetFormController implements Initializable{
-    
+
+public class DepartmetFormController implements Initializable {
+
 	private Department entity;
+
+	private DepartmentService service;
 	@FXML
 	private TextField txtId;
 	@FXML
@@ -24,37 +34,65 @@ public class DepartmetFormController implements Initializable{
 	private Button btSave;
 	@FXML
 	private Button btDelete;
-	
+
 	public void setDepartament(Department entity) {
 		this.entity = entity;
 	}
-	@FXML
-	public void onBtSaveAction() {
-		System.out.println("button save");
+
+	public void setDepartmentService(DepartmentService service) {
+		this.service = service;
 	}
+
+	@FXML
+	public void onBtSaveAction(ActionEvent event) {
+		if (entity == null) {
+			throw new IllegalStateException("Entity was null");
+		}
+		if (service == null) {
+			throw new IllegalStateException("Service was null");
+		}
+		try {
+			entity = getFormData();
+			service.saveOrUpdate(entity);
+			//fechar a janela
+			Utils.currentStage(event).close();
+		}catch (DbException e) {
+			Alerts.showAlert("Error saving objtp", null, e.getMessage(),AlertType.ERROR);
+		}
+	}
+
+	private Department getFormData() {
+		// criando um objeto vazio
+		Department obj = new Department();
+		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		obj.setName(txtName.getText());
+		return obj;
+	}
+
 	@FXML
 	public void onBtCancelAction() {
 		System.out.println("button cancel");
 	}
-	
+
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-			initializeNodes();
+		initializeNodes();
 	}
+
 	private void initializeNodes() {
-		//para fazer so  aceitar numeros inteiros
+		// para fazer so aceitar numeros inteiros
 		Constraints.setTextFieldInteger(txtId);
-		//limitando  a quantidade de caracteres
+		// limitando a quantidade de caracteres
 		Constraints.setTextFieldMaxLength(txtName, 30);
-		
+
 	}
-	public  void updateFormData() {
-		if(entity == null) {
+
+	public void updateFormData() {
+		if (entity == null) {
 			throw new IllegalStateException("Entity was null");
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
 	}
-	
 
 }
