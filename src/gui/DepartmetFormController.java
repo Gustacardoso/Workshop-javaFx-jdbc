@@ -2,9 +2,12 @@ package gui;
 
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -24,6 +27,8 @@ public class DepartmetFormController implements Initializable {
 	private Department entity;
 
 	private DepartmentService service;
+	
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 	@FXML
 	private TextField txtId;
 	@FXML
@@ -42,6 +47,11 @@ public class DepartmetFormController implements Initializable {
 	public void setDepartmentService(DepartmentService service) {
 		this.service = service;
 	}
+	
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+           //metodo  que atualiza a lista
+		   dataChangeListeners.add(listener);
+	}
 
 	@FXML
 	public void onBtSaveAction(ActionEvent event) {
@@ -54,11 +64,19 @@ public class DepartmetFormController implements Initializable {
 		try {
 			entity = getFormData();
 			service.saveOrUpdate(entity);
+			notifyDateChangeListeners();
 			//fechar a janela
 			Utils.currentStage(event).close();
 		}catch (DbException e) {
 			Alerts.showAlert("Error saving objtp", null, e.getMessage(),AlertType.ERROR);
 		}
+	}
+
+	private void notifyDateChangeListeners() {
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChanged();
+		}
+		
 	}
 
 	private Department getFormData() {
@@ -70,8 +88,8 @@ public class DepartmetFormController implements Initializable {
 	}
 
 	@FXML
-	public void onBtCancelAction() {
-		System.out.println("button cancel");
+	public void onBtCancelAction(ActionEvent event) {
+		Utils.currentStage(event).close();
 	}
 
 	@Override
@@ -94,5 +112,7 @@ public class DepartmetFormController implements Initializable {
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
 	}
+
+	
 
 }

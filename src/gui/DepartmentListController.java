@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import com.mysql.jdbc.Util;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -30,7 +31,7 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable{
+public class DepartmentListController implements Initializable, DataChangeListener{
     //criando uma dependencia aq no departmentListcntroler
 	private DepartmentService service; 
 	@FXML
@@ -103,6 +104,8 @@ public class DepartmentListController implements Initializable{
 			//injetando
 			controller.setDepartament(obj);
 			controller.setDepartmentService(new DepartmentService());
+			//me inscrevendo para o  evento
+			controller.subscribeDataChangeListener(this);
 			controller.updateFormData();
 			
 			//colocar uma tela na frente da outra
@@ -117,5 +120,10 @@ public class DepartmentListController implements Initializable{
 		} catch (IOException e) {
 			Alerts.showAlert("Io Exception", "Erre loading view", e.getMessage(), AlertType.ERROR);
 		}
+	}
+	@Override
+	public void onDataChanged() {
+		updateTableView();
+		
 	}
 }
