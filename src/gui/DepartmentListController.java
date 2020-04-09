@@ -51,7 +51,11 @@ public class DepartmentListController implements Initializable{
 	public void onBtNewAction (ActionEvent event) {
 		//temor que pegar ocurrentStage e colocar dentro da variavel stage, la da classe util
 		Stage parentStage = Utils.currentStage(event);
-		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		/*update, no button. como é um buton para cadastrar novo departemente 
+		ele vai iniciar vazio, ai temos que instanciar o  department,
+		assim temos que colocar um parametro a mais no createDialogForm.*/
+		Department obj = new Department();
+		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
 		
 	}
 	//fazemos isso ao inves de fazer o new, fizemos uma inversao de controller
@@ -89,11 +93,17 @@ public class DepartmentListController implements Initializable{
 	}
 	
 	//tem que instanciar Stage
-	private void createDialogForm(String absoluteName, Stage parentStage) {
+	private void createDialogForm(Department obj,String absoluteName, Stage parentStage) {
 		try {
 			//logica para abrir nossa janela de formulario
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
+			//estamos pegando uma referencia para o controlador
+			DepartmetFormController controller = loader.getController();
+			//injetando
+			controller.setDepartament(obj);
+			controller.updateFormData();
+			
 			//colocar uma tela na frente da outra
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter Department data:");
