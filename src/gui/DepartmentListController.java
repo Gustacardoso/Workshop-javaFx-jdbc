@@ -86,7 +86,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private void initializeNodes() {
 		// padrao para iniciar o comportamento das colunas
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		TableColumnName.setCellValueFactory(new PropertyValueFactory<>("Name"));
+		TableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 		// para a tela do table view ir ate o final, mais um macete
 		Stage stage = (Stage) Main.getMainScene().getWindow();
