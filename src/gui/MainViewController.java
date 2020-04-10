@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import model.services.DepartmentService;
+import model.services.SellerService;
 
 public class MainViewController implements Initializable {
 
@@ -31,7 +32,10 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onMenuItemSellerAction() {
-		System.out.println("MenuItemSellerAction");
+		loadView("/gui/SellerList.fxml", (SellerListController controller) -> {
+		       controller.setSellerService(new SellerService());
+		       controller.updateTableView();
+		});
 	}
 	//tivemos que usar espressao lambda.
 	@FXML
