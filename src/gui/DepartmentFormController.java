@@ -118,6 +118,7 @@ public class DepartmentFormController implements Initializable {
 		Constraints.setTextFieldInteger(txtId);
 		// limitando a quantidade de caracteres
 		Constraints.setTextFieldMaxLength(txtName, 30);
+		
 
 	}
 

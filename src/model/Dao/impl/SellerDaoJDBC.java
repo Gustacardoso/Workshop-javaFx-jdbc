@@ -1,6 +1,7 @@
 package model.Dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -157,7 +158,7 @@ executeQuery() = executa uma pesquisa no banco*/
 		  obj.setName(rs.getString("Name"));
 		  obj.setEmail(rs.getString("Email"));
 		  obj.setBaseSalary(rs.getDouble("BaseSalary"));
-		  obj.setBirthDate(rs.getDate("BirthDate"));
+		  obj.setBirthDate(new java.util.Date(rs.getTimestamp("BirthDate").getTime()));
 		  obj.setDepartment(dep);
 		return obj;
 	}
